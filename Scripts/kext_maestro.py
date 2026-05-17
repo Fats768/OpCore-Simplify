@@ -174,26 +174,14 @@ class KextMaestro:
                     print("    2. Navigate to NVRAM -> Add -> 7C436110-AB2A-4BBB-A880-FE41995C9F82 -> boot-args")
                     print("    3. Remove \"-v debug=0x100 keepsyms=1\" from boot-args")
                     print("")
-                    if self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("25.0.0"):
-                        recommended_option = 1
-                        recommended_name = "NootRX"
-                        max_option = 3
-                        print("\033[1;93mNote:\033[0m Since macOS Tahoe 26, WhateverGreen has known connector patching issues for AMD {} GPUs.".format(gpu_props.get("Codename")))
-                        print("To avoid this, you can use NootRX or choose not to install a GPU kext.")
-                        print("")
-                        print("1. \033[1mNootRX\033[0m - Uses latest GPU firmware")
-                        print("2. \033[1mWhateverGreen\033[0m - Uses original Apple firmware")
-                        print("3. \033[1mDon't use any kext\033[0m")
-                    else:
-                        recommended_option = 2
-                        recommended_name = "WhateverGreen"
-                        max_option = 2
-                        print("\033[1;93mNote:\033[0m")
-                        print("- AMD {} GPUs have two available kext options:".format(gpu_props.get("Codename")))
-                        print("- You can try different kexts after installation to find the best one for your system")
-                        print("")
-                        print("1. \033[1mNootRX\033[0m - Uses latest GPU firmware")
-                        print("2. \033[1mWhateverGreen\033[0m - Uses original Apple firmware")
+                    recommended_option = 2
+                    recommended_name = "WhateverGreen"
+                    print("\033[1;93mNote:\033[0m")
+                    print("- AMD {} GPUs have two available kext options:".format(gpu_props.get("Codename")))
+                    print("- You can try different kexts after installation to find the best one for your system")
+                    print("")
+                    print("1. \033[1mNootRX\033[0m - Uses latest GPU firmware")
+                    print("2. \033[1mWhateverGreen\033[0m - Uses original Apple firmware")
                     print("")
 
                     if any(other_gpu_props.get("Manufacturer") == "Intel" for other_gpu_props in hardware_report.get("GPU", {}).values()):
@@ -205,7 +193,7 @@ class KextMaestro:
 
                     kext_option = self.utils.request_input("Select kext for your AMD {} GPU (default: {}): ".format(gpu_props.get("Codename"), recommended_name)).strip() or str(recommended_option)
                     
-                    if kext_option.isdigit() and 0 < int(kext_option) < max_option + 1:
+                    if kext_option.isdigit() and 0 < int(kext_option) < 3:
                         selected_option = int(kext_option)
                     else:
                         print("\033[93mInvalid selection, using recommended option: {}\033[0m".format(recommended_option))
