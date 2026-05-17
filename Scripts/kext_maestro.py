@@ -119,27 +119,26 @@ class KextMaestro:
             self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("23.0.0"):
             selected_kexts.append("RestrictEvents")
 
-        for codec_properties in hardware_report.get("Sound", {}).values():
-            if codec_properties.get("Device ID") in codec_layouts.data:
-                if self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("25.0.0"):
-                    print("\n\033[1;93mNote:\033[0m Since macOS Tahoe 26 DP2, Apple has removed AppleHDA kext and uses the Apple T2 chip for audio management.")
-                    print("To use AppleALC, you must rollback AppleHDA. Alternatively, you can use VoodooHDA.")
-                    print("")
-                    print("1. \033[1mAppleALC\033[0m - Requires AppleHDA rollback with \033[1;93mOpenCore Legacy Patcher\033[0m")
-                    print("2. \033[1mVoodooHDA\033[0m - Lower audio quality, manual injection to /Library/Extensions")
-                    print("")
-                    while True:
-                        kext_option = self.utils.request_input("Select audio kext for your system: ").strip()
-                        if kext_option == "1":
-                            needs_oclp = True
-                            selected_kexts.append("AppleALC")
-                            break
-                        elif kext_option == "2":
-                            break
-                        else:
-                            print("\033[91mInvalid selection, please try again.\033[0m\n\n")
-                else:
-                    selected_kexts.append("AppleALC")
+        if any(codec_properties.get("Device ID") in codec_layouts.data for codec_properties in hardware_report.get("Sound", {}).values()):
+            if self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("25.0.0"):
+                print("\n\033[1;93mNote:\033[0m Since macOS Tahoe 26 DP2, Apple has removed AppleHDA kext and uses the Apple T2 chip for audio management.")
+                print("To use AppleALC, you must rollback AppleHDA. Alternatively, you can use VoodooHDA.")
+                print("")
+                print("1. \033[1mAppleALC\033[0m - Requires AppleHDA rollback with \033[1;93mOpenCore Legacy Patcher\033[0m")
+                print("2. \033[1mVoodooHDA\033[0m - Lower audio quality, manual injection to /Library/Extensions")
+                print("")
+                while True:
+                    kext_option = self.utils.request_input("Select audio kext for your system: ").strip()
+                    if kext_option == "1":
+                        needs_oclp = True
+                        selected_kexts.append("AppleALC")
+                        break
+                    elif kext_option == "2":
+                        break
+                    else:
+                        print("\033[91mInvalid selection, please try again.\033[0m\n\n")
+            else:
+                selected_kexts.append("AppleALC")
         
         if "AMD" in hardware_report.get("CPU").get("Manufacturer") and self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("21.4.0") or \
             int(hardware_report.get("CPU").get("CPU Count")) > 1 and self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("19.0.0"):
