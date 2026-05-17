@@ -151,13 +151,13 @@ class Github:
                 asset_name += "22"
             elif "Monterey" in file_name:
                 asset_name += "21"
-            elif "BigSur" in file_name:
+            elif "Big_Sur" in file_name:
                 asset_name += "20"
             elif "Catalina" in file_name:
                 asset_name += "19"
             elif "Mojave" in file_name:
                 asset_name += "18"
-            elif "HighSierra" in file_name:
+            elif "High_Sierra" in file_name:
                 asset_name += "17"
 
         return asset_name
