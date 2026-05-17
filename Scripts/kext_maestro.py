@@ -452,6 +452,14 @@ class KextMaestro:
         executable_path = os.path.join("Contents", "MacOS", bundle_info.get("CFBundleExecutable", "None"))
         if not os.path.exists(os.path.join(kexts_directory, kext_path, executable_path)):
             executable_path = ""
+
+        bundle_libraries = {
+            bundle_identifier: bundle_version
+            for bundle_identifier, bundle_version in bundle_info.get("OSBundleLibraries", {}).items() 
+        }
+
+        if bundle_info.get("CFBundleExecutable", "None") == "AppleALC":
+            bundle_libraries["org.ChefKiss.NootedRed"] = "0.8.10"
         
         return {
             "BundlePath": kext_path.replace("\\", "/").lstrip("/"),
@@ -460,10 +468,7 @@ class KextMaestro:
             "PlistPath": plist_path.replace("\\", "/").lstrip("/"),
             "BundleIdentifier": bundle_info.get("CFBundleIdentifier"),
             "BundleVersion": bundle_info.get("CFBundleVersion"),
-            "BundleLibraries": {
-                bundle_identifier: bundle_version
-                for bundle_identifier, bundle_version in bundle_info.get("OSBundleLibraries", {}).items() 
-            }
+            "BundleLibraries": bundle_libraries
         }
 
     def modify_kexts(self, plist_path, hardware_report, macos_version):
