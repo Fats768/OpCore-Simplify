@@ -205,16 +205,6 @@ class KextMaestro:
                     
                     continue
 
-                if self.utils.parse_darwin_version(macos_version) >= self.utils.parse_darwin_version("25.0.0"):
-                    print("\n*** Found {} is AMD {} GPU.".format(gpu_name, gpu_props.get("Codename")))
-                    print("")
-                    print("\033[1;93mNote:\033[0m Since macOS Tahoe 26, WhateverGreen has known connector patching issues for AMD GPUs.")
-                    print("The current recommendation is to not use WhateverGreen.")
-                    print("However, you can still try adding it to see if it works on your system.")
-                    print("")
-                    self.utils.request_input("Press Enter to continue...")
-                    break
-
                 selected_kexts.append("WhateverGreen")
 
         if "Laptop" in hardware_report.get("Motherboard").get("Platform") and ("ASUS" in hardware_report.get("Motherboard").get("Name") or "NootedRed" in selected_kexts):
